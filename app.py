@@ -9,13 +9,13 @@ from datetime import datetime #import date and time
 from PyPDF2 import PdfReader #PdfReader is used for the parsing the text
 import os #os -- python built-in os module
 from dotenv import load_dotenv #load_dotenv -- Used to read the .env files
-import spacy #spacy -- library to perform NLP tasks
+
 import requests 
 import re # re-- Built in Regular Expression
 import uuid #UUIS -- Universal Unique Identifires
 
 app = Flask(__name__)  #Create Instance , which becomes Web Server Gateway Interface (WSGI) application
-nlp = spacy.load("en_core_web_sm") # loading a Specific pre-trained model
+
 load_dotenv() # part of the python-dotenv
 # Database config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///uploads.db'# Tells databse connect ,///--relative path
