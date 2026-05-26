@@ -149,7 +149,9 @@ async function sendFile() {
         body: formData
     });
 
-    const data = await res.json();
+    const res = await response.text();
+    console.log(res);
+    const data = JSON.parse(res);
 
     const result = data.ats_output;
 
