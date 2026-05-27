@@ -9,13 +9,13 @@ from datetime import datetime #import date and time
 from PyPDF2 import PdfReader #PdfReader is used for the parsing the text
 import os #os -- python built-in os module
 from dotenv import load_dotenv #load_dotenv -- Used to read the .env files
-import spacy #spacy -- library to perform NLP tasks
+
 import requests 
 import re # re-- Built in Regular Expression
 import uuid #UUIS -- Universal Unique Identifires
 
 app = Flask(__name__)  #Create Instance , which becomes Web Server Gateway Interface (WSGI) application
-nlp = spacy.load("en_core_web_sm") # loading a Specific pre-trained model
+
 load_dotenv() # part of the python-dotenv
 # Database config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///uploads.db'# Tells databse connect ,///--relative path
@@ -123,18 +123,14 @@ SKILLS_DB = [
 ]
 
 def extract_skills(text):
-
-    doc = nlp(text.lower())
-
+    text = text.lower()
     found_skills = []
 
-    for token in doc:
-
-        if token.text in SKILLS_DB:
-            found_skills.append(token.text)
+    for skill in SKILLS_DB:
+        if skill in text:
+            found_skills.append(skill)
 
     return list(set(found_skills))
-
 # Helper function
 def allowed_file(filename):
 
@@ -161,6 +157,8 @@ def parse_llm_output(text):
 def get_ats_output(resume_text, job_text):
 
     OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")  #Define the key of openrouter
+    if not OPENROUTER_API_KEY:
+        return {"error": "API key missing"}
 
     url = "https://openrouter.ai/api/v1/chat/completions" #URL For the open router chat
 
