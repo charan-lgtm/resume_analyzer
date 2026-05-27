@@ -132,10 +132,15 @@
 
 <script>
 
+<script>
+
 async function sendFile() {
 
-    const file = document.getElementById("fileInput").files[0];
-    const job = document.getElementById("jobInput").value;
+    const file =
+        document.getElementById("fileInput").files[0];
+
+    const job =
+        document.getElementById("jobInput").value;
 
     if (!file || !job) {
         alert("Please upload file and job description");
@@ -147,33 +152,44 @@ async function sendFile() {
     formData.append("file", file);
     formData.append("job_description", job);
 
-    const response = await fetch("/upload_file", {
-        method: "POST",
-        body: formData
-    });
+    try {
 
-    const data = await response.json();
+        const response = await fetch("/upload_file", {
+            method: "POST",
+            body: formData
+        });
 
-    console.log(data);
+        const data = await response.json();
 
-    const result = data.ats_output;
+        console.log(data);
 
-    document.getElementById("resultBox").style.display = "block";
+        const result = data.ats_output;
 
-    document.getElementById("score").innerText =
-        result.ats_score;
+        document.getElementById("resultBox").style.display = "block";
 
-    document.getElementById("matched").innerText =
-        (result.matched_skills || []).join(", ");
+        document.getElementById("score").innerText =
+            result.ats_score;
 
-    document.getElementById("missing").innerText =
-        (result.missing_skills || []).join(", ");
+        document.getElementById("matched").innerText =
+            (result.matched_skills || []).join(", ");
 
-    document.getElementById("feedback").innerText =
-        result.feedback;
+        document.getElementById("missing").innerText =
+            (result.missing_skills || []).join(", ");
+
+        document.getElementById("feedback").innerText =
+            result.feedback;
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Error uploading resume");
+
+    }
 
 }
 
+</script>
 </script>
 </script>
 
