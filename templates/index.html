@@ -130,9 +130,11 @@
 /*async -- it allows the program to handle time-consuming tasks without freezing the entire application */
 
 
+<script>
+
 async function sendFile() {
 
-    const file = document.getElementById("fileInput").files[0]; /*const -- is a keyword is used to declare variables that cannot be reassigned new value*/
+    const file = document.getElementById("fileInput").files[0];
     const job = document.getElementById("jobInput").value;
 
     if (!file || !job) {
@@ -140,25 +142,26 @@ async function sendFile() {
         return;
     }
 
-    const formData = new FormData(); /*formData -- is a object in js a web api used to easily construct a set of key-value pairs representing form fields and their values*/
+    const formData = new FormData();
+
     formData.append("file", file);
     formData.append("job_description", job);
 
-    const res = await fetch("/upload_file", { /*await -- is used to pass the execution of asynchronous function*/
+    const response = await fetch("/upload_file", {
         method: "POST",
         body: formData
     });
 
-    const res = await response.text();
-    console.log(res);
-    const data = JSON.parse(res);
+    const data = await response.json();
+
+    console.log(data);
 
     const result = data.ats_output;
 
-    /*document.getElementById -- method is a core part of the javascript*/
     document.getElementById("resultBox").style.display = "block";
 
-    document.getElementById("score").innerText = result.ats_score;
+    document.getElementById("score").innerText =
+        result.ats_score;
 
     document.getElementById("matched").innerText =
         (result.matched_skills || []).join(", ");
@@ -171,6 +174,7 @@ async function sendFile() {
 
 }
 
+</script>
 </script>
 
 </body>
