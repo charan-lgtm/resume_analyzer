@@ -136,56 +136,42 @@
 
 async function sendFile() {
 
-    const file =
-        document.getElementById("fileInput").files[0];
-
-    const job =
-        document.getElementById("jobInput").value;
+    const file = document.getElementById("fileInput").files[0]; /*const -- is a keyword is used to declare variables that cannot be reassigned new value*/
+    const job = document.getElementById("jobInput").value;
 
     if (!file || !job) {
         alert("Please upload file and job description");
         return;
     }
 
-    const formData = new FormData();
-
+    const formData = new FormData(); /*formData -- is a object in js a web api used to easily construct a set of key-value pairs representing form fields and their values*/
     formData.append("file", file);
     formData.append("job_description", job);
 
-    try {
+    const response = await fetch("/upload_file", { /*await -- is used to pass the execution of asynchronous function*/
+        method: "POST",
+        body: formData
+    });
 
-        const response = await fetch("/upload_file", {
-            method: "POST",
-            body: formData
-        });
+    const res = await response.text();
+    console.log(res);
+    const data = JSON.parse(res);
 
-        const data = await response.json();
+    const result = data.ats_output;
 
-        console.log(data);
+    /*document.getElementById -- method is a core part of the javascript*/
+    document.getElementById("resultBox").style.display = "block";
 
-        const result = data.ats_output;
+    document.getElementById("score").innerText = result.ats_score;
 
-        document.getElementById("resultBox").style.display = "block";
+    document.getElementById("matched").innerText =
+        (result.matched_skills || []).join(", ");
 
-        document.getElementById("score").innerText =
-            result.ats_score;
+    document.getElementById("missing").innerText =
+        (result.missing_skills || []).join(", ");
 
-        document.getElementById("matched").innerText =
-            (result.matched_skills || []).join(", ");
-
-        document.getElementById("missing").innerText =
-            (result.missing_skills || []).join(", ");
-
-        document.getElementById("feedback").innerText =
-            result.feedback;
-
-    } catch (error) {
-
-        console.error(error);
-
-        alert("Error uploading resume");
-
-    }
+    document.getElementById("feedback").innerText =
+        result.feedback;
 
 }
 
